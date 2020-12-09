@@ -136,6 +136,16 @@ module.exports = (html, callback, options = {}) => {
             cell.hMerge = cs - 1;
           }
 
+          // In case you need the flexibility to config all possible
+          //  _value, formula, numFmt, cellType...
+          const b64Config = $td.attr('data-base64-xlsx-cell-config');
+          if (b64Config) {
+            try {
+              const configStr = Buffer.from(b64Config, 'base64').toString('utf-8');
+              Object.assign(cell, JSON.parse(configStr));
+            } catch (e) {}
+          }
+
           for (let r = 0; r < rs; r++) {
             if (offsets[hi + r] === undefined) {
               offsets[hi + r] = 0;

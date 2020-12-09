@@ -346,4 +346,59 @@ describe('Test: index.js', () => {
         });
     });
   });
+
+  it('should htmlToXlsx data base64 cell config ok', (done) => {
+    /* eslint-disable no-useless-escape */
+    const btoa = str => Buffer.from(str, 'utf-8').toString('base64');
+    const object2b64 = obj => btoa(JSON.stringify(obj));
+    const cells = [0, 1, 10, 100, 1000, 10000, 100000, NaN].map(amount => ({
+      numFmt: '"$"#,##0.00;[Red]\-"$"#,##0.00',
+      cellType: 'TypeNumeric',
+      _value: amount
+    }));
+    const body = cells.map(cell => `
+      <tr>
+        <td data-base64-xlsx-cell-config="${object2b64(cell)}"></td>
+      </tr>
+    `).concat(`
+      <tr>
+        <td data-base64-xlsx-cell-config="Trigger Base 64 parse Error"></td>
+      </tr>
+    `, `
+      <tr>
+        <td data-base64-xlsx-cell-config="${btoa('Trigger JSON parse Error')}"></td>
+      </tr>
+    `);
+
+    htmlTo(`
+      <style type="text/css">
+        table th, table td {
+          width: 400px;
+          height: 50px;
+          vertical-align: middle;
+          text-align: right;
+        }
+      </style>
+      <table>
+        ${body}
+      </table>
+    `, (err, file) => {
+      if (err) return done(err);
+
+      const tmpfile = join(tmpdir(), 'data-base64-cell-config.xlsx');
+      const expfile = join(__dirname, 'expect/data-base64-cell-config.xlsx');
+      file
+        .saveAs()
+        .pipe(fs.createWriteStream(tmpfile))
+        .on('finish', () => {
+          const expectFile = fs.createReadStream(expfile);
+          const actualFile = fs.createReadStream(tmpfile);
+          streamEqual(expectFile, actualFile, function (err, ok) {
+            expect(err).to.be.null;
+            expect(ok).to.be.true;
+            done();
+          });
+        });
+    });
+  });
 });
