@@ -1,12 +1,12 @@
 {
-  "name": "html2xlsx",
-  "version": "0.4.2",
+  "name": "html2xlsx-hd",
+  "version": "0.4.4",
   "description": "Transform html to excel (just support xlsx)",
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint --ext .js src test",
     "build": "rimraf lib && NODE_ENV=production babel --out-dir=lib src",
-    "prepare": "npm run build",
+    "prepublish": "npm run build",
     "test": "NODE_ENV=test nyc mocha --no-timeouts",
     "report": "nyc report --reporter=html",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
@@ -47,7 +47,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/d-band/html2xlsx.git"
+    "url": "git+https://github.com/yuanoook/html2xlsx-hd.git"
   },
   "engines": {
     "node": ">= 4"
@@ -58,12 +58,12 @@
     "html",
     "table"
   ],
-  "author": "d-band",
+  "author": "yuanoook",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/d-band/html2xlsx/issues"
+    "url": "https://github.com/yuanoook/html2xlsx-hd/issues"
   },
-  "homepage": "https://github.com/d-band/html2xlsx#readme",
+  "homepage": "https://github.com/yuanoook/html2xlsx-hd/tree/html2xlsx-hd#readme",
   "dependencies": {
     "better-xlsx": "^0.7.4",
     "cheerio": "^1.0.0-rc.3",

@@ -1,30 +1,32 @@
-html2xlsx
+html2xlsx-hd
 ===========
+
+Based on [html2xlsx](https://github.com/d-band/html2xlsx) with change [data-base64-xlsx-cell-config](https://github.com/d-band/html2xlsx/pull/64)
 
 > Transform html to excel (just support xlsx)
 
-[![NPM version](https://img.shields.io/npm/v/html2xlsx.svg)](https://www.npmjs.com/package/html2xlsx)
-[![NPM downloads](https://img.shields.io/npm/dm/html2xlsx.svg)](https://www.npmjs.com/package/html2xlsx)
-[![Build Status](https://travis-ci.org/d-band/html2xlsx.svg?branch=master)](https://travis-ci.org/d-band/html2xlsx)
-[![Coverage Status](https://coveralls.io/repos/github/d-band/html2xlsx/badge.svg?branch=master)](https://coveralls.io/github/d-band/html2xlsx?branch=master)
-[![Dependency Status](https://david-dm.org/d-band/html2xlsx.svg)](https://david-dm.org/d-band/html2xlsx)
-[![Greenkeeper badge](https://badges.greenkeeper.io/d-band/html2xlsx.svg)](https://greenkeeper.io/)
+[![NPM version](https://img.shields.io/npm/v/html2xlsx.svg)](https://www.npmjs.com/package/html2xlsx-hd)
+[![NPM downloads](https://img.shields.io/npm/dm/html2xlsx-hd.svg)](https://www.npmjs.com/package/html2xlsx-hd)
+[![Build Status](https://travis-ci.org/yuanoook/html2xlsx-hd.svg?branch=master)](https://travis-ci.org/yuanoook/html2xlsx-hd)
+[![Coverage Status](https://coveralls.io/repos/github/yuanoook/html2xlsx-hd/badge.svg?branch=master)](https://coveralls.io/github/yuanoook/html2xlsx-hd?branch=master)
+[![Dependency Status](https://david-dm.org/yuanoook/html2xlsx-hd.svg)](https://david-dm.org/yuanoook/html2xlsx-hd)
+[![Greenkeeper badge](https://badges.greenkeeper.io/yuanoook/html2xlsx-hd.svg)](https://greenkeeper.io/)
 
 ---
 
 ## Install
 
 ```bash
-$ npm install html2xlsx
+$ npm install html2xlsx-hd
 ```
 
 ## Usage
 
 - [More Examples](examples)
 
-```
+```javascript
 const fs = require('fs');
-const htmlTo = require('html2xlsx');
+const htmlTo = require('html2xlsx-hd');
 
 htmlTo(`
   <style type="text/css">
@@ -74,15 +76,48 @@ htmlTo(`
 });
 ```
 
+## Customize cell
+
+Config a cell with all possible _value, formula, numFmt, cellType...
+
+To use `data-base64-xlsx-cell-config`
+
+```javascript
+const htmlTo = require('html2xlsx-hd')
+const btoa = (window && window.btoa) || (str => Buffer.from(str, 'utf-8').toString('base64'))
+
+htmlTo(`
+  <table>
+    <tr>
+      <td data-base64-xlsx-cell-config="${btoa(JSON.stringify({
+          numFmt: '"$"#,##0.00;[Red]\-"$"#,##0.00',
+          cellType: 'TypeNumeric',
+          _value: 10000
+        }))}"
+      >
+        10000
+      </td>
+    </tr>
+  </table>
+`, (err, file) => {
+  if (err) return console.error(err);
+
+  file.saveAs()
+    .pipe(fs.createWriteStream('test.xlsx'))
+    .on('finish', () => console.log('Done.'));
+});
+```
+
 ## Report a issue
 
-* [All issues](https://github.com/d-band/html2xlsx/issues)
-* [New issue](https://github.com/d-band/html2xlsx/issues/new)
+* [All issues](https://github.com/yuanoook/html2xlsx-hd/issues)
+* [New issue](https://github.com/yuanoook/html2xlsx-hd/issues/new)
 
 ## Reference
 
+- https://github.com/d-band/html2xlsx
 - https://github.com/d-band/better-xlsx
 
 ## License
 
-html2xlsx is available under the terms of the MIT License.
+html2xlsx-hd is available under the terms of the MIT License.
